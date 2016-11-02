@@ -1,6 +1,7 @@
 from queue import PriorityQueue as PQ
+from math import log2
 
-ngram = 10
+ngram = 5
 window_length = 5
 default_keyboard = ' .,?!;:-"\
 qwertyuiop\
@@ -8,6 +9,14 @@ asdfghjkl$\
 zxcvbnm*()\
 1234567890\
 &@\'%/[]{}#'
+
+
+def get_from_dict(key, d: dict):
+    if key not in d:
+        return 0.5
+    if d[key] == 0:
+        return 0.5
+    return d[key]
 
 
 def try_training():
@@ -26,7 +35,7 @@ def get_char(text: str, index: int):
 
 
 def add_one_occ(d: dict, ch, key):
-    ref = ch, key
+    ref = key + ch
     if key in d:
         d[key] += 1
     else:
@@ -37,18 +46,34 @@ def add_one_occ(d: dict, ch, key):
         d[ref] = 1
 
 
-def check_freq(current_c, statistics: dict, keyboard=default_keyboard, previous=[]):
-    if len(previous) >= ngram:
-        del previous[0]
-    previous.append(current_c)
-    prev = ''.join(previous)
+def get_key(text):
+    key = [get_char(text, len(text) - i - 2) for i in range(ngram)]
+    key.reverse()
+    key = ''.join(key)
+    return key
+
+
+def check_freq(text: str, statistics: dict, keyboard=default_keyboard):
+    prob = 0
+    # for i in range(len(text)):
+    #     prob += get_freq(text[i], get_key(text), statistics)
     candidates = PQ()
     for c in keyboard:
-        if (c, prev) not in statistics:
-            candidates.put((-0.5, c))
-        else:
-            candidates.put((-statistics[(c, prev)], c))
+        np = prob + get_freq(c, get_key(text + c), statistics)
+        ele = -np, c
+        candidates.put(ele)
     return candidates
+    # if len(previous) >= ngram:
+    #     del previous[0]
+    # previous.append(current_c)
+    # prev = ''.join(previous)
+    # candidates = PQ()
+    # for c in keyboard:
+    #     if (c, prev) not in statistics:
+    #         candidates.put((-0.5, c))
+    #     else:
+    #         candidates.put((-statistics[(c, prev)], c))
+    # return candidates
 
 
 def training(text: str, statistics: dict):
@@ -71,12 +96,15 @@ def get_wnd_from_pq(q: PQ):
     return wnd
 
 
-def predict(text: str, model: dict):
-    window = []
-    candidates = check_freq('', model)
+def get_freq(ch: str, key: str, stats: dict):
+    return log2(get_from_dict(key + ch, stats)) - log2(get_from_dict(key, stats))
+
+
+def predict(text: str, stats: dict):
+    candidates = check_freq('', stats)
     print(''.join(get_wnd_from_pq(candidates)))
-    for c in text:
-        candidates = check_freq(c, model)
+    for i in range(len(text)):
+        t = text[:i + 1]
+        candidates = check_freq(t, stats)
         window = get_wnd_from_pq(candidates)
         print(''.join(window))
-        window = []

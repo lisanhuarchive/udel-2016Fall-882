@@ -1,0 +1,50 @@
+// Format: letter #|letter from passage|predicted letters|scan time
+1|T|atcde|3
+2|h|fghij|4
+3|i|ilmno|2
+// Warning: Letter #4: '=' does not exist in keyboard layout.
+5|d|uvwxd|6
+6| |abcde|3
+7|q|qghij|2
+8|u|ulqno|2
+9|i|ipq|2
+10|c|ucwxy|3
+11|k|akcde|3
+12| |fghij|3
+13|b|klmno|10
+14|r|pqrst|4
+15|o|uvwxy|12
+16|w|abcde|5
+17|n|fghij|11
+18| |klmno|3
+// Warning: Letter #19: Predictions contain space(s).
+19|f|pq sf|6
+20|o|uvwxy|12
+21|x|abcde|7
+22| |fghij|3
+23|j|klmno|11
+24|u|pqrst|10
+25|m||12
+26|p|abcde|13
+27|s|fghij|6
+28| |klmno|3
+29|o|pqrst|12
+30|v|uvwxy|3
+31|e|abcde|6
+32|r|fghij|7
+33| |klmno|3
+34|t|pqrst|6
+35|h|uvwxy|10
+36|e|abcde|6
+37| |fghij|3
+38|l|klmno|3
+39|a|pqrst|5
+40|z|uvwxy|6
+41|y|abcde|9
+42| |fghij|3
+// Warning: Letter #43: Predictions file has reached end of file.
+43|d||7
+44|o||12
+45|g||9
+46|.||4
+// Total scan time: 275
